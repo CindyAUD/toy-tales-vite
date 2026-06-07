@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import App from '../components/App';
 import '@testing-library/jest-dom';
 
@@ -11,12 +11,12 @@ describe("Deleting a Toy", () => {
         const woody = await findByText("Woody")
         expect(woody).toBeInTheDocument();
 
-        const donateButton = getAllByText("Donate to GoodWill")[0];
+        const donateButton = getAllByText("Donate to Goodwill")[0];
         fireEvent.click(donateButton);
 
-        const deletedWoody = await findByText("Woody")
-    
-        expect(deletedWoody).not.toBeInTheDocument()
+        await waitFor(() => {
+          expect(screen.queryByText("Woody")).toBeNull();
+        });
     });
 });
   

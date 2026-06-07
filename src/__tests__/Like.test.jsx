@@ -29,6 +29,7 @@ describe("Liking a Toy", () => {
 
         fireEvent.click(likeButton);
 
+        await app.findByText("9 Likes")
         toyCards = await app.findAllByTestId('toy-card')
         toyCard = toyCards[0]
         likes = parseInt(toyCard.querySelector('p').textContent.split(' ')[0])
@@ -44,6 +45,7 @@ describe("Liking a Toy", () => {
 
         fireEvent.click(likeButton);
 
+        await app.findByText("10 Likes")
         toyCards = await app.findAllByTestId('toy-card')
         toyCard = toyCards[0]
         likes = parseInt(toyCard.querySelector('p').textContent.split(' ')[0])

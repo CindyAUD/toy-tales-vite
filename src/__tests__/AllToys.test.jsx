@@ -19,7 +19,7 @@ describe('1st Deliverable', () => {
     expect(toyImages).toEqual(baseToyImages);
 
     const toyLikes = toyCards.map((toyCard) => toyCard.querySelector('p').textContent);
-    const baseToyLikes = global.baseToys.map((toy) => toy.likes.toString() + " Likes ");
+    const baseToyLikes = global.baseToys.map((toy) => toy.likes.toString() + " Likes");
     expect(toyLikes).toEqual(baseToyLikes);
   });
 
@@ -38,7 +38,7 @@ describe('1st Deliverable', () => {
     expect(toyImages).toEqual(baseToyImages);
 
     const toyLikes = toyCards.map((toyCard) => toyCard.querySelector('p').textContent);
-    const baseToyLikes = global.alternateToys.map((toy) => toy.likes.toString() + " Likes ");
+    const baseToyLikes = global.alternateToys.map((toy) => toy.likes.toString() + " Likes");
     expect(toyLikes).toEqual(baseToyLikes);
   });
 })

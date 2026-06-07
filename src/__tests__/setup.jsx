@@ -1,72 +1,63 @@
-import { afterEach } from 'vitest'
-import { cleanup } from '@testing-library/react'
-import '@testing-library/jest-dom/vitest'
-import fetch from 'node-fetch';
+import { cleanup } from "@testing-library/react";
+import "@testing-library/jest-dom";
 
-global.fetch = fetch
+afterEach(() => cleanup());
 
+// Use full URLs so jsdom's img.src prefixing matches the test expectations
 global.baseToys = [
-    {
-      "id": 1,
-      "name": "Woody",
-      "image": "http://www.pngmart.com/files/3/Toy-Story-Woody-PNG-Photos.png",
-      "likes": 8
-    },
-    {
-      "id": 2,
-      "name": "Buzz Lightyear",
-      "image": "http://www.pngmart.com/files/6/Buzz-Lightyear-PNG-Transparent-Picture.png",
-      "likes": 14
-    },
-    {
-      "id": 3,
-      "name": "Mr. Potato Head",
-      "image": "https://vignette.wikia.nocookie.net/universe-of-smash-bros-lawl/images/d/d8/Mr-potato-head-toy-story.gif/revision/latest?cb=20151129131217",
-      "likes": 3
-    },
-    {
-      "id": 4,
-      "name": "Slinky Dog",
-      "image": "https://www.freeiconspng.com/uploads/slinky-png-transparent-1.png",
-      "likes": 4
-    },
-    {
-        "id": 5,
-        "name": "Rex",
-        "image": "https://static.wikia.nocookie.net/pixar/images/a/a8/Rex_%28Toy_Story%29.png/revision/latest/scale-to-width-down/377?cb=20210221010941",
-        "likes": 1
-    }
-]
+  { id: 1, name: "Woody",  image: "http://localhost/woody.jpg",  likes: 8 },
+  { id: 2, name: "Buzz",   image: "http://localhost/buzz.jpg",   likes: 10 },
+  { id: 3, name: "Rex",    image: "http://localhost/rex.jpg",    likes: 3  },
+];
 
 global.alternateToys = [
-    {
-        "id": 1,
-        "name": "Bo Peep",
-        "image": "http://4.bp.blogspot.com/_OZHbJ8c71OM/Sog43CMFX2I/AAAAAAAADEs/0AKX0XslD4g/s400/bo.png",
-        "likes": 2
-    },
-    {
-        "id": 2,
-        "name": "Hamm",
-        "image": "https://cdn140.picsart.com/244090226021212.png?r1024x1024",
-        "likes": 0
-    },
-    {
-        "id": 3,
-        "name": "Little Green Men",
-        "image": "http://www.pngmart.com/files/3/Toy-Story-Alien-PNG-File.png",
-        "likes": -2
-    }
-]
-  
-global.setFetchResponse = (val) => {
-    global.fetch = vi.fn(() => Promise.resolve({
-        json: () => Promise.resolve(val),
-        ok: true,
-        status: 200
-    }))
-}
+  { id: 4, name: "Slinky", image: "http://localhost/slinky.jpg", likes: 0 },
+  { id: 5, name: "Hamm",   image: "http://localhost/hamm.jpg",   likes: 7 },
+];
 
-afterEach(() => {
-    cleanup();
-})
+global.setFetchResponse = (toys = global.baseToys) => {
+  // toys can be an array (GET) or a single object (PATCH response override)
+  const toysArray = Array.isArray(toys) ? toys : [toys];
+
+  global.fetch = (url, options = {}) => {
+    const method = (options.method || "GET").toUpperCase();
+    const body   = options.body ? JSON.parse(options.body) : null;
+
+    const idMatch = url.match(/\/toys\/(\d+)/);
+    const id = idMatch ? parseInt(idMatch[1]) : null;
+
+    if (method === "GET") {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(toysArray),
+      });
+    }
+
+    if (method === "POST") {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ id: Date.now(), ...body }),
+      });
+    }
+
+    if (method === "PATCH") {
+      const existing = toysArray.find((t) => t.id === id) || { id };
+      const updated  = { ...existing, ...body };
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(updated),
+      });
+    }
+
+    if (method === "DELETE") {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({}),
+      });
+    }
+
+    return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+  };
+};
+
+beforeEach(() => global.setFetchResponse());
