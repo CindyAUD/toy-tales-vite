@@ -1,15 +1,3 @@
-/**
- * src/__tests__/App.test.jsx
- *
- * Full test suite for Toy Tales covering all four CRUD deliverables.
- *
- * ✅  No @testing-library/jest-dom matchers used directly here —
- *     only standard Jest (toBe, toBeNull, not.toBeNull, toContain, etc.)
- *     so this passes in CodeGrade environments without jest-dom issues.
- *
- * The fetch mock is set up in setup.jsx via global.setFetchResponse().
- */
-
 import React from "react";
 import {
   render,
