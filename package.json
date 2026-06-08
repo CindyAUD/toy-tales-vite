@@ -7,7 +7,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "server": "json-server --watch db.json --port 3001",
-    "test": "jest --watchAll=false --forceExit"
+    "test": "jest --config jest.config.js --watchAll=false --forceExit"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -30,7 +30,7 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["<rootDir>/src/__tests__/setup.jsx"],
+    "setupFilesAfterEnv": ["<rootDir>/src/setupTests.js"],
     "transform": {
       "^.+\\.(js|jsx)$": "babel-jest"
     },
