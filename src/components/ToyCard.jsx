@@ -16,8 +16,8 @@ function ToyCard({ toy, onDeleteToy, onLikeToy }) {
         Like {"<3"}
       </button>
       <button className="donate-btn" onClick={() => onDeleteToy(id)}>
-        Donate to Goodwill
-      </button>
+  Donate to GoodWill
+</button>
     </div>
   );
 }

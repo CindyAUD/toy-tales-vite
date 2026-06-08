@@ -3,7 +3,6 @@ import "@testing-library/jest-dom";
 
 afterEach(() => cleanup());
 
-// Use full URLs so jsdom's img.src prefixing matches the test expectations
 global.baseToys = [
   { id: 1, name: "Woody",  image: "http://localhost/woody.jpg",  likes: 8 },
   { id: 2, name: "Buzz",   image: "http://localhost/buzz.jpg",   likes: 10 },
@@ -16,13 +15,11 @@ global.alternateToys = [
 ];
 
 global.setFetchResponse = (toys = global.baseToys) => {
-  // toys can be an array (GET) or a single object (PATCH response override)
   const toysArray = Array.isArray(toys) ? toys : [toys];
 
-  global.fetch = (url, options = {}) => {
+  const fetchImpl = (url, options = {}) => {
     const method = (options.method || "GET").toUpperCase();
     const body   = options.body ? JSON.parse(options.body) : null;
-
     const idMatch = url.match(/\/toys\/(\d+)/);
     const id = idMatch ? parseInt(idMatch[1]) : null;
 
@@ -32,14 +29,12 @@ global.setFetchResponse = (toys = global.baseToys) => {
         json: () => Promise.resolve(toysArray),
       });
     }
-
     if (method === "POST") {
       return Promise.resolve({
         ok: true,
         json: () => Promise.resolve({ id: Date.now(), ...body }),
       });
     }
-
     if (method === "PATCH") {
       const existing = toysArray.find((t) => t.id === id) || { id };
       const updated  = { ...existing, ...body };
@@ -48,16 +43,16 @@ global.setFetchResponse = (toys = global.baseToys) => {
         json: () => Promise.resolve(updated),
       });
     }
-
     if (method === "DELETE") {
       return Promise.resolve({
         ok: true,
         json: () => Promise.resolve({}),
       });
     }
-
     return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
   };
+
+  global.fetch = jest.fn(fetchImpl);
 };
 
 beforeEach(() => global.setFetchResponse());
