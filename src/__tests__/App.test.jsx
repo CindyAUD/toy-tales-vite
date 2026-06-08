@@ -10,17 +10,25 @@ import ToyCard from "../components/ToyCard";
 
 // ── 1st Deliverable: GET – display all toys on page load ─────────────────────
 
+// ── 1st Deliverable: GET – display all toys on page load ─────────────────────
+
 describe("1st Deliverable — display all toys", () => {
+  
+  // 🌟 ADD THIS BEFOREEACH BLOCK HERE:
+  beforeEach(() => {
+    global.setFetchResponse(global.baseToys);
+  });
+
   test("fetches toys from http://localhost:3001/toys on mount", async () => {
     render(<App />);
     await screen.findByText("Woody");
-    // fetch was called once with the correct URL
-    const calls = global.fetch.mock
-      ? global.fetch.mock.calls
-      : null;
-    // Even without jest.fn() tracking we verify the data arrived
+    
+    const calls = global.fetch.mock ? global.fetch.mock.calls : null;
     expect(screen.queryByText("Woody")).not.toBeNull();
   });
+
+  // ... rest of your tests
+
 
   test("renders all toy names from the API", async () => {
     render(<App />);
