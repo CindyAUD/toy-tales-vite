@@ -40,7 +40,7 @@ describe("1st Deliverable — display all toys", () => {
   test("renders likes count for each toy", async () => {
     render(<App />);
     for (const toy of global.baseToys) {
-      const el = await screen.findByText(`${toy.likes} Likes`);
+      const el = await screen.findByText(`${toy.likes} Likes `);
       expect(el).not.toBeNull();
     }
   });
@@ -148,7 +148,7 @@ describe("4th Deliverable — like a toy", () => {
     await screen.findByText("Woody");
 
     // Woody starts at 8 likes
-    expect(screen.queryByText("8 Likes")).not.toBeNull();
+    expect(screen.queryByText("8 Likes ")).not.toBeNull();
 
     const woodyCard = screen.getByText("Woody").closest("[data-testid='toy-card']");
     fireEvent.click(woodyCard.querySelector(".like-btn"));
@@ -165,10 +165,10 @@ describe("4th Deliverable — like a toy", () => {
     const woodyCard = screen.getByText("Woody").closest("[data-testid='toy-card']");
     fireEvent.click(woodyCard.querySelector(".like-btn"));
 
-    await waitFor(() => expect(screen.queryByText("9 Likes")).not.toBeNull());
+    await waitFor(() => expect(screen.queryByText("9 Likes ")).not.toBeNull());
 
     // Buzz still has its original count
-    expect(screen.queryByText("10 Likes")).not.toBeNull();
+    expect(screen.queryByText("10 Likes ")).not.toBeNull();
   });
 
   test("toy order is preserved after liking", async () => {
@@ -178,7 +178,7 @@ describe("4th Deliverable — like a toy", () => {
     const woodyCard = screen.getByText("Woody").closest("[data-testid='toy-card']");
     fireEvent.click(woodyCard.querySelector(".like-btn"));
 
-    await waitFor(() => expect(screen.queryByText("9 Likes")).not.toBeNull());
+    await waitFor(() => expect(screen.queryByText("9 Likes ")).not.toBeNull());
 
     const cards = document.querySelectorAll("[data-testid='toy-card']");
     // Woody's card should still be first

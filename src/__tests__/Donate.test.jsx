@@ -11,7 +11,7 @@ describe("Deleting a Toy", () => {
         const woody = await findByText("Woody")
         expect(woody).toBeInTheDocument();
 
-        const donateButton = getAllByText("Donate to Goodwill")[0];
+        const donateButton = getAllByText(/Donate to GoodWill/i)[0];
         fireEvent.click(donateButton);
 
         await waitFor(() => {
